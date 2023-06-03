@@ -5,6 +5,7 @@ import {
     ResponseObject,
 } from '@loopback/rest';
 import { IpinfoService } from "../services";
+import { authenticate } from '@loopback/authentication';
 
 /**
  * OpenAPI response for getIpInfo()
@@ -33,6 +34,7 @@ const IPINFO_RESPONSE: ResponseObject = {
 }
 
 
+@authenticate('jwt')
 export class IpController {
     constructor(
         @inject('services.IpinfoService')
