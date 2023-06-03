@@ -1,0 +1,14 @@
+{
+  "ids": {
+    "User": 2,
+    "UserCredentials": 2
+  },
+  "models": {
+    "User": {
+      "b50ffb02-03c8-4fbd-9d10-d78b61dc1c2f": "{\"id\":\"b50ffb02-03c8-4fbd-9d10-d78b61dc1c2f\",\"email\":\"admin@example.com\"}"
+    },
+    "UserCredentials": {
+      "86d3d010-c6ec-4572-a30e-4d6b6bdc43f2": "{\"id\":\"86d3d010-c6ec-4572-a30e-4d6b6bdc43f2\",\"password\":\"$2a$10$ETEt4mt9/B49iL3LHTKyvuDUkL81DJIidnHV77tReFGPGftmaiQsa\",\"userId\":\"b50ffb02-03c8-4fbd-9d10-d78b61dc1c2f\"}"
+    }
+  }
+}
