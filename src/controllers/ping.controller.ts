@@ -1,10 +1,9 @@
-import { service } from '@loopback/core';
+import { inject, CoreBindings, ApplicationMetadata } from '@loopback/core';
 import {
     get,
     response,
     ResponseObject,
 } from '@loopback/rest';
-import { AppInfo, ConfigurationService } from '../services/configuration.service';
 import { authenticate } from '@loopback/authentication';
 
 /**
@@ -33,13 +32,17 @@ const PING_RESPONSE: ResponseObject = {
  */
 @authenticate('jwt')
 export class PingController {
-    constructor(@service(ConfigurationService) private config: ConfigurationService) {}
+    constructor(@inject(CoreBindings.APPLICATION_METADATA) private meta: ApplicationMetadata) {}
 
     // Map to `GET /ping`
     @get('/ping')
     @response(200, PING_RESPONSE)
-    ping(): AppInfo {
+    ping(): object {
         // Reply with application information
-        return this.config.appInfo();
+        return {
+            name: this.meta.name,
+            version: this.meta.version,
+            description: this.meta.description,
+        };
     }
 }
