@@ -20,6 +20,8 @@ const PING_RESPONSE: ResponseObject = {
                     name: { type: 'string' },
                     description: { type: 'string' },
                     version: { type: 'string' },
+                    author: { type: 'string' },
+                    homepage: { type: 'string' },
                 }
             },
         },
@@ -43,6 +45,8 @@ export class PingController {
             name: this.meta.name,
             version: this.meta.version,
             description: this.meta.description,
+            author: this.meta.author,
+            homepage: this.meta.homepage,
         };
     }
 }
