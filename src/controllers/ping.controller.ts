@@ -5,6 +5,7 @@ import {
     ResponseObject,
 } from '@loopback/rest';
 import { authenticate } from '@loopback/authentication';
+import _ from 'lodash';
 
 /**
  * OpenAPI response for ping()
@@ -28,6 +29,7 @@ const PING_RESPONSE: ResponseObject = {
     },
 };
 
+type AppInfo = Pick<ApplicationMetadata, 'name' | 'version' | 'description' | 'author' | 'homepage'>;
 
 /**
  * A simple controller to get app metadata
@@ -39,14 +41,8 @@ export class PingController {
     // Map to `GET /ping`
     @get('/ping')
     @response(200, PING_RESPONSE)
-    ping(): object {
+    ping(): AppInfo {
         // Reply with application information
-        return {
-            name: this.meta.name,
-            version: this.meta.version,
-            description: this.meta.description,
-            author: this.meta.author,
-            homepage: this.meta.homepage,
-        };
+        return _.pick(this.meta, ['name', 'version', 'description', 'author', 'homepage']);
     }
 }
