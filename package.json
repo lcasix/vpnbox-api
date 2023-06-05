@@ -2,6 +2,8 @@
   "name": "vpnbox-api",
   "version": "0.0.1",
   "description": "VPNBox API",
+  "author": "Leonardo Casini <mail@leonardocasini.net>",
+  "homepage": "https://github.com/lcasix/vpnbox-api",
   "keywords": [
     "loopback-application",
     "loopback"
@@ -41,7 +43,6 @@
     "type": "git",
     "url": ""
   },
-  "author": "Leonardo Casini <mail@leonardocasini.net>",
   "license": "",
   "files": [
     "README.md",
