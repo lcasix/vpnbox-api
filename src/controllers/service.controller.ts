@@ -1,6 +1,6 @@
 import { authenticate } from '@loopback/authentication';
 import { Model, model, property } from '@loopback/repository';
-import { get, getModelSchemaRef, param, response, HttpErrors } from '@loopback/rest';
+import { get, getModelSchemaRef, param, response, HttpErrors, patch, requestBody } from '@loopback/rest';
 import { readdir } from 'fs/promises';
 import path from 'path';
 import _ from 'lodash';
@@ -34,6 +34,7 @@ export class Service extends Model {
 }
 
 type ServiceMeta = Omit<Service, 'active'>;
+type ServiceState = Pick<Service, 'active'>;
 
 
 @authenticate('jwt')
@@ -84,9 +85,42 @@ export class ServiceController {
         try {
             await exec('systemctl is-active --quiet openvpn@' + id);
             service.active = true;
-        } catch(e) {
+        } catch (e) {
             service.active = false;
         }
         return service;
+    }
+
+    @patch('/services/{name}')
+    @response(204, {
+        description: 'Service state change',
+    })
+    async manage(
+        @param.path.string('name') id: string,
+        @requestBody({
+            content: {
+                'application/json': {
+                    schema: getModelSchemaRef(Service, {
+                        title: 'ServiceState',
+                        exclude: ['name', 'uri'],
+                    }),
+                },
+            },
+        })
+        state: ServiceState,
+    ): Promise<void> {
+        const service: Service = await this.status(id);
+        // when rquested state is active service must be started
+        const startRequested = state.active;
+        // when rquested state is not active service must be stopped
+        const stopRequested = !state.active;
+
+        if (!service.active && startRequested) {
+            // start service
+            await exec('sudo systemctl start openvpn@' + id);
+        } else if (service.active && stopRequested) {
+            // stop service
+            await exec('sudo systemctl stop openvpn@' + id);
+        }
     }
 }
