@@ -36,6 +36,15 @@ export class Service extends Model {
 type ServiceMeta = Omit<Service, 'active'>;
 type ServiceState = Pick<Service, 'active'>;
 
+/**
+ * Build an OpenVPN template unit name from a service name.
+ * @argument name the service simple name
+ * @returns the corresponding OpenVPN unit name
+ */
+function unit(name: string): string {
+    return 'openvpn@' + name;
+}
+
 
 @authenticate('jwt')
 export class ServiceController {
@@ -83,7 +92,7 @@ export class ServiceController {
 
         // the is-active command returns an exit code 0 if the unit is active, non-zero otherwise
         try {
-            await exec('systemctl is-active --quiet openvpn@' + id);
+            await exec('systemctl is-active --quiet ' + unit(id));
             service.active = true;
         } catch (e) {
             service.active = false;
@@ -117,10 +126,10 @@ export class ServiceController {
 
         if (!service.active && startRequested) {
             // start service
-            await exec('sudo systemctl start openvpn@' + id);
+            await exec('sudo systemctl start ' + unit(id));
         } else if (service.active && stopRequested) {
             // stop service
-            await exec('sudo systemctl stop openvpn@' + id);
+            await exec('sudo systemctl stop ' + unit(id));
         }
     }
 }
